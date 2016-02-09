@@ -14,7 +14,8 @@ theta = diag(c(0.5,0.5,0.5,0.5,0.5))
 lambda_y = matrix(c(0.8,0.8,0.8,0.8,0.8),5,1)
 epsilon = rnorm(n) # error for y_i
 A = matrix(c(-1,1),1,2)
-c = rbinom(n,1,0.5) + 1
+c.fill = rbinom(n,1,0.5)
+c <- cbind(c.fill,1-c.fill)
 
 u = cbind(rbinom(n,1,0.5),rbinom(n,1,0.5),rbinom(n,1,0.5))
 x = matrix(rnorm(n*3),n,3) # covariates
@@ -176,13 +177,18 @@ lambda_y = S_yeta %*% solve(S_eta)
 theta = diag(diag(S_yy - S_yeta %*% t(lambda_y) - lambda_y %*% t(S_yeta) + lambda_y %*% S_eta %*% t(lambda_y)))
 
 
+# equation 29 ?????????
+
+A = S_etac %*% (1/cov(c))
+Gamma_eta = S_etax %*% (1/cov(x))
+
 logu_c = 0
 #12
 for(i in 1:n){
  for(j in 1:ncol(tau)){
   for(k in 1:K){
-   if(c[i] == k)
-    logu_c =  logu_c +  c[i] * log(tau[i,j]) + (1-u[n,j])*log(1-tau[i,j])
+   if(c[i,k] == 1)
+    logu_c =  logu_c +  log(tau[i,j]) + (1-u[n,j])*log(1-tau[i,j])
   }
  }
 }
@@ -190,7 +196,7 @@ for(i in 1:n){
 logc_x = 0
 for(i in 1:n){
  for(k in 1:K){
-  add = ifelse(c[i] == k,c[i] * log(pi[i,k]),0)
+  add = ifelse(c[i,k] == 1,log(pi[i,k]),0)
   logc_x = logc_x + add
  }
 }
@@ -199,8 +205,8 @@ for(i in 1:n){
 
 logeta_cx = 0
 for(i in 1:n){
- A_c = ifelse(c[i] == 1,A[1],A[2])
- logeta_cx = logeta_cx + dnorm(A_c + Gamma_eta %*% x[i,],0, psi,log=T)
+ #A_c = ifelse(c[i,] == 1,A[1],A[2])
+ logeta_cx = logeta_cx + dnorm(A %*% c[i,] + Gamma_eta %*% x[i,],0, psi,log=T)
 }
 
 
