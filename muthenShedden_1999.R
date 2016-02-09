@@ -1,27 +1,22 @@
-logu_c = 0
-#12
-for(i in 1:n){
-for(j in 1:ncol(tau)){
-for(k in 1:K){
-if(c[i] == k)
-logu_c =  logu_c +  c[i] * log(tau[i,j]) + (1-u[n,j])*log(1-tau[i,j])
-}
-}
-}
+
 
 ## chapter 7
 # example 7.17 Mixture CFA Modeling
-
+library(boot)
+library(mvtnorm)
 
 
 
 
 n=500
 K = 2
+theta = diag(c(0.5,0.5,0.5,0.5,0.5))
 lambda_y = matrix(c(0.8,0.8,0.8,0.8,0.8),5,1)
 epsilon = rnorm(n) # error for y_i
 A = matrix(c(-1,1),1,2)
 c = rbinom(n,1,0.5) + 1
+
+u = cbind(rbinom(n,1,0.5),rbinom(n,1,0.5),rbinom(n,1,0.5))
 x = matrix(rnorm(n*3),n,3) # covariates
 Gamma_eta = t(c(-1,0,1)) # regression coefficients from x to eta
 Zeta = rnorm(n)
@@ -57,8 +52,8 @@ Gamma_c =matrix(c(-1,1,
                   -1,1),3,2)
 
 for(i in 1:n){
-  for(c in 1:2){
-   pi[i,c] = inv.logit(a[i,c] + Gamma_c[,c] %*% x[i,])
+  for(cc in 1:2){
+   pi[i,cc] = inv.logit(a[i,cc] + Gamma_c[,cc] %*% x[i,])
   }
 }
 
@@ -86,21 +81,47 @@ print(count)
 # -------------------------------
 # --------------------------------
 
-S_cc = matrix(0,2,2)
+
+# eq 9
+yu_x = matrix(0,500,2)
 for(i in 1:n){
- S_cc = S_cc + 1/n * diag(pi[i,])
+ for(j in 1:3){
+  for(k in 1:K){
+   yu_x[i,k] = yu_x[i,k] + pi[i,k] * dmvnorm(as.vector(lambda_y %*% (A[k] + Gamma_eta %*% x[i, ])), rep(0,5),
+                                             lambda_y %*% psi %*% t(lambda_y) + theta) * tau[i,j]
+  }
+ }
 }
 
-pi[i,] %*% t(x[i,])
+
+# eq 14 
+# computing posterior probability, p_ik
+
+p_ik = 1/yu_x
+
+#for(i in 1:n){
+# for(k in 1:K){
+#  pi[i,K] * dmvnorm(as.vector(lambda_y %*%(A[k] + Gamma_eta %*% x[i,])),rep(0,5), 
+#                    lambda_y %*% psi %*% t(lambda_y) + theta)
+# }
+#}
+
+
+
+S_cc = matrix(0,2,2)
+for(i in 1:n){
+ S_cc = S_cc + 1/n * diag(p_ik[i,])
+}
+
 
 S_cx = matrix(0,2,3)
 for(i in 1:n){
- S_cx = S_cx + 1/n * pi[i,] %*% t(x[i,])
+ S_cx = S_cx + 1/n * p_ik[i,] %*% t(x[i,])
 }
 
 S_cy = matrix(0,2,5)
 for(i in 1:n){
- S_cy = S_cy + 1/n * pi[i,] %*% t(y[i,])
+ S_cy = S_cy + 1/n * p_ik[i,] %*% t(y[i,])
 }
 
 
@@ -111,13 +132,10 @@ S_yx = cov(y,x)
 
 pi_avg = c(0,0)
 for(i in 1:n){
-  pi_avg = pi_avg + 1/n * pi[i,]
+  pi_avg = pi_avg + 1/n * p_ik[i,]
 }
 
 
-
-
-theta = diag(c(0.5,0.5,0.5,0.5,0.5))
 V = solve(t(lambda_y) %*% solve(theta) %*% lambda_y + solve(psi))
 
 # not sure if S_xx calculation is correct
@@ -137,27 +155,6 @@ S_etax = V %*% (solve(psi) %*% (Gamma_eta %*% S_xx + A %*% S_cx) + t(lambda_y) %
 
 S_etac = V %*% (solve(psi) %*% (Gamma_eta %*% t(S_cx) + A %*% S_cc) + t(lambda_y) %*% solve(theta) %*% t(S_cy))
 
-
-# eq 9
-yu_x = 0 
-for(i in 1:n){
- for(j in 1:3){
-  for(k in 1:K){
-   yu_x = yu_x + pi[i,k] * dmvnorm(as.vector(lambda_y %*% (A[k] + Gamma_eta %*% x[i, ])), rep(0,5),
-                    lambda_y %*% psi %*% t(lambda_y) + theta) * tau[i,j]
-  }
- }
-}
-
-
-# eq 14 
-for(i in 1:n){
- for(k in 1:K){
-  pi[i,K] * dmvnorm(as.vector(lambda_y %*%(A[k] + Gamma_eta %*% x[i,])),rep(0,5), 
-                    lambda_y %*% psi %*% t(lambda_y) + theta)
- }
-}
-pi
 
 
 # -------------------------------
@@ -190,17 +187,14 @@ for(i in 1:n){
  }
 }
 
-
-logu_c = 0
-#12
+logc_x = 0
 for(i in 1:n){
- for(j in 1:ncol(tau)){
-  for(k in 1:K){
-   if(c[i] == k)
-    logu_c =  logu_c +  c[i] * log(tau[i,j]) + (1-u[n,j])*log(1-tau[i,j])
-  }
+ for(k in 1:K){
+  add = ifelse(c[i] == k,c[i] * log(pi[i,k]),0)
+  logc_x = logc_x + add
  }
 }
+
 
 
 logeta_cx = 0
@@ -208,14 +202,15 @@ for(i in 1:n){
  A_c = ifelse(c[i] == 1,A[1],A[2])
  logeta_cx = logeta_cx + dnorm(A_c + Gamma_eta %*% x[i,],0, psi,log=T)
 }
-logy_eta = 0
 
+
+logy_eta = 0
 for(i in 1:n){
  logy_eta = logy_eta + dmvnorm(as.vector(lambda_y * eta[i]),rep(0,nrow(theta)), theta,log=TRUE)
 }
 
 
-(logLik_c = logc_x + logeta_cx + logy_eta + logu_c)
-
+logLik_c = logc_x + logeta_cx + logy_eta + logu_c
+print(logLik_c)
 
 }
