@@ -1,3 +1,14 @@
+logu_c = 0
+#12
+for(i in 1:n){
+for(j in 1:ncol(tau)){
+for(k in 1:K){
+if(c[i] == k)
+logu_c =  logu_c +  c[i] * log(tau[i,j]) + (1-u[n,j])*log(1-tau[i,j])
+}
+}
+}
+
 ## chapter 7
 # example 7.17 Mixture CFA Modeling
 
@@ -6,6 +17,7 @@
 
 
 n=500
+K = 2
 lambda_y = matrix(c(0.8,0.8,0.8,0.8,0.8),5,1)
 epsilon = rnorm(n) # error for y_i
 A = matrix(c(-1,1),1,2)
@@ -126,6 +138,28 @@ S_etax = V %*% (solve(psi) %*% (Gamma_eta %*% S_xx + A %*% S_cx) + t(lambda_y) %
 S_etac = V %*% (solve(psi) %*% (Gamma_eta %*% t(S_cx) + A %*% S_cc) + t(lambda_y) %*% solve(theta) %*% t(S_cy))
 
 
+# eq 9
+yu_x = 0 
+for(i in 1:n){
+ for(j in 1:3){
+  for(k in 1:K){
+   yu_x = yu_x + pi[i,k] * dmvnorm(as.vector(lambda_y %*% (A[k] + Gamma_eta %*% x[i, ])), rep(0,5),
+                    lambda_y %*% psi %*% t(lambda_y) + theta) * tau[i,j]
+  }
+ }
+}
+
+
+# eq 14 
+for(i in 1:n){
+ for(k in 1:K){
+  pi[i,K] * dmvnorm(as.vector(lambda_y %*%(A[k] + Gamma_eta %*% x[i,])),rep(0,5), 
+                    lambda_y %*% psi %*% t(lambda_y) + theta)
+ }
+}
+pi
+
+
 # -------------------------------
 # -------------------------------
 #           M-Step
@@ -143,5 +177,45 @@ psi = 1 ### just keep set it at this for this example
 lambda_y = S_yeta %*% solve(S_eta)
 
 theta = diag(diag(S_yy - S_yeta %*% t(lambda_y) - lambda_y %*% t(S_yeta) + lambda_y %*% S_eta %*% t(lambda_y)))
+
+
+logu_c = 0
+#12
+for(i in 1:n){
+ for(j in 1:ncol(tau)){
+  for(k in 1:K){
+   if(c[i] == k)
+    logu_c =  logu_c +  c[i] * log(tau[i,j]) + (1-u[n,j])*log(1-tau[i,j])
+  }
+ }
+}
+
+
+logu_c = 0
+#12
+for(i in 1:n){
+ for(j in 1:ncol(tau)){
+  for(k in 1:K){
+   if(c[i] == k)
+    logu_c =  logu_c +  c[i] * log(tau[i,j]) + (1-u[n,j])*log(1-tau[i,j])
+  }
+ }
+}
+
+
+logeta_cx = 0
+for(i in 1:n){
+ A_c = ifelse(c[i] == 1,A[1],A[2])
+ logeta_cx = logeta_cx + dnorm(A_c + Gamma_eta %*% x[i,],0, psi,log=T)
+}
+logy_eta = 0
+
+for(i in 1:n){
+ logy_eta = logy_eta + dmvnorm(as.vector(lambda_y * eta[i]),rep(0,nrow(theta)), theta,log=TRUE)
+}
+
+
+(logLik_c = logc_x + logeta_cx + logy_eta + logu_c)
+
 
 }
