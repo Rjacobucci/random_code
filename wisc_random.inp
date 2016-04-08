@@ -1,0 +1,25 @@
+TITLE:     
+
+DATA:      FILE=wisc44.dat;
+
+VARIABLE:  
+    NAMES = age1-age4 verbal1-verbal4;
+
+    MISSING = .;
+
+    TSCORES = age1-age4;
+
+ 
+ANALYSIS: TYPE = RANDOM;
+
+MODEL:
+!Growth model
+    i s | verbal1-verbal4 AT age1-age4;
+    verbal1 verbal2 verbal3 verbal4 (resid);
+    !i BY verbal1-verbal6@1;
+    !s BY verbal1 AT age1;
+    !s BY verbal2 AT age2;
+    !s BY verbal4 AT age4;
+    !s BY verbal6 AT age6; 
+
+OUTPUT:  SAMPSTAT TECH1;
