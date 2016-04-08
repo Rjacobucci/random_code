@@ -59,7 +59,7 @@ s~~0*s2
 
 count= 0
 samps = c(50,100,200,500,5000)
-iters=20
+iters=50
 mods = list(mod.noGrowth,mod.linearGrowth,mod.quadGrowth)
 
 fit.ret = data.frame(matrix(NA,iters*length(samps)*length(mods),22))
@@ -138,3 +138,18 @@ fit.ret[count,"jags_dic4"] = extract(fit4@external$runjags,"dic")
   }
  }
 }
+
+
+
+
+
+min = matrix(NA,12,5)
+for(i in 1:12){
+  min[i,1] = which(fit.ret[i,c(3,8,13,18)] == min(fit.ret[i,c(3,8,13,18)]))
+  min[i,2] = which(fit.ret[i,c(4,9,14,19)] == min(fit.ret[i,c(4,9,14,19)]))
+  min[i,3] = which(fit.ret[i,c(5,10,15,20)] == min(fit.ret[i,c(5,10,15,20)]))
+  min[i,4] = which(fit.ret[i,c(6,11,16,21)] == min(fit.ret[i,c(6,11,16,21)]))
+  min[i,5] = which(fit.ret[i,c(7,12,17,22)] == min(fit.ret[i,c(7,12,17,22)]))
+}
+
+
