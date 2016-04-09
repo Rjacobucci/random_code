@@ -86,69 +86,110 @@ dat <- simulateData(mods[[k]],sample.nobs=samps[[j]],model.type="lavaan")
 
 mod1 <- ' i =~ 1*t1 + 1*t2 + 1*t3 + 1*t4
           s =~ 0*t1 + 0*t2 + 0*t3 + 0*t4 '
-fit1 <- bgrowth(mod1, data=dat,sample=100000,burnin=10000, adapt=2000)
-
-fit.ret[count,"conv1"] = all(fit1@external$runjags$psrf$psrf[,1] < 1.2)
-
-fits1= fitmeasures(fit1)
-fit.ret[count,"logl1"] = fits1["logl"]
-fit.ret[count,"bic1"] = fits1["bic"]
-fit.ret[count,"dic1"] = fits1["dic"]
-fit.ret[count,"waic1"] = fits1["waic"]
-fit.ret[count,"looic1"] = fits1["looic"]
-fit.ret[count,"margloglik1"] = fits1["margloglik"]
-fit.ret[count,"jags_dic1"] = extract(fit1@external$runjags,"dic")
-
+fit1 = try(bgrowth(mod1, data=dat,sample=100000,burnin=10000, adapt=2000
+                   ,jagcontrol=list(method="rjparallel")))
+if(inherits(fit1, "try-error")){
+ fit.ret[count,"conv1"] = -9999
+ fit.ret[count,"logl1"] = -9999
+ fit.ret[count,"bic1"] = -9999
+ fit.ret[count,"dic1"] = -9999
+ fit.ret[count,"waic1"] = -9999
+ fit.ret[count,"looic1"] = -9999
+ fit.ret[count,"margloglik1"] = -9999
+ fit.ret[count,"jags_dic1"] = -9999
+}else{
+ fit.ret[count,"conv1"] = all(fit1@external$runjags$psrf$psrf[,1] < 1.2)
+ fits1 = fitmeasures(fit1)
+ fit.ret[count,"logl1"] = fits1["logl"]
+ fit.ret[count,"bic1"] = fits1["bic"]
+ fit.ret[count,"dic1"] = fits1["dic"]
+ fit.ret[count,"waic1"] = fits1["waic"]
+ fit.ret[count,"looic1"] = fits1["looic"]
+ fit.ret[count,"margloglik1"] = fits1["margloglik"]
+ fit.ret[count,"jags_dic1"] = extract(fit1@external$runjags,"dic")
+}
 
 
 mod2 <- ' i =~ 1*t1 + 1*t2 + 1*t3 + 1*t4
 s =~ 0*t1 + 1*t2 + 2*t3 + 3*t4 '
-fit2 <- bgrowth(mod2, data=dat,sample=100000,burnin=10000, adapt=2000)
-
-fit.ret[count,"conv2"] = all(fit2@external$runjags$psrf$psrf[,1] < 1.2)
-fits2 = fitmeasures(fit2)
-fit.ret[count,"logl2"] = fits2["logl"]
-fit.ret[count,"bic2"] = fits2["bic"]
-fit.ret[count,"dic2"] = fits2["dic"]
-fit.ret[count,"waic2"] = fits2["waic"]
-fit.ret[count,"looic2"] = fits2["looic"]
-fit.ret[count,"margloglik2"] = fits2["margloglik"]
-fit.ret[count,"jags_dic2"] = extract(fit2@external$runjags,"dic")
-
+fit2 = try(bgrowth(mod2, data=dat,sample=100000,burnin=10000, adapt=2000
+                   ,jagcontrol=list(method="rjparallel")))
+if(inherits(fit2, "try-error")){
+ fit.ret[count,"conv2"] = -9999
+ fit.ret[count,"logl2"] = -9999
+ fit.ret[count,"bic2"] = -9999
+ fit.ret[count,"dic2"] = -9999
+ fit.ret[count,"waic2"] = -9999
+ fit.ret[count,"looic2"] = -9999
+ fit.ret[count,"margloglik2"] = -9999
+ fit.ret[count,"jags_dic2"] = -9999
+}else{
+ fit.ret[count,"conv2"] = all(fit2@external$runjags$psrf$psrf[,1] < 1.2)
+ fits2 = fitmeasures(fit2)
+ fit.ret[count,"logl2"] = fits2["logl"]
+ fit.ret[count,"bic2"] = fits2["bic"]
+ fit.ret[count,"dic2"] = fits2["dic"]
+ fit.ret[count,"waic2"] = fits2["waic"]
+ fit.ret[count,"looic2"] = fits2["looic"]
+ fit.ret[count,"margloglik2"] = fits2["margloglik"]
+ fit.ret[count,"jags_dic2"] = extract(fit2@external$runjags,"dic")
+}
 
 
 mod3 <- ' i =~ 1*t1 + 1*t2 + 1*t3 + 1*t4
           s =~ 0*t1 + 1*t2 + 2*t3 + 3*t4
           s2 =~ 0*t1 + 1*t2 + 4*t3 + 9*t4'
-fit3 <- bgrowth(mod3, data=dat,sample=100000,burnin=10000, adapt=2000)
 
-fit.ret[count,"conv3"] = all(fit3@external$runjags$psrf$psrf[,1] < 1.2)
-fits3 = fitmeasures(fit3)
-fit.ret[count,"logl3"] = fits3["logl"]
-fit.ret[count,"bic3"] = fits3["bic"]
-fit.ret[count,"dic3"] = fits3["dic"]
-fit.ret[count,"waic3"] = fits3["waic"]
-fit.ret[count,"looic3"] = fits3["looic"]
-fit.ret[count,"margloglik3"] = fits3["margloglik"]
-fit.ret[count,"jags_dic3"] = extract(fit3@external$runjags,"dic")
-
+fit3 = try(bgrowth(mod3, data=dat,sample=100000,burnin=10000, adapt=2000
+                 ,jagcontrol=list(method="rjparallel")))
+if(inherits(fit3, "try-error")){
+ fit.ret[count,"conv3"] = -9999
+ fit.ret[count,"logl3"] = -9999
+ fit.ret[count,"bic3"] = -9999
+ fit.ret[count,"dic3"] = -9999
+ fit.ret[count,"waic3"] = -9999
+ fit.ret[count,"looic3"] = -9999
+ fit.ret[count,"margloglik3"] = -9999
+ fit.ret[count,"jags_dic3"] = -9999
+}else{
+ fit.ret[count,"conv3"] = all(fit3@external$runjags$psrf$psrf[,1] < 1.2)
+ fits3 = fitmeasures(fit3)
+ fit.ret[count,"logl3"] = fits3["logl"]
+ fit.ret[count,"bic3"] = fits3["bic"]
+ fit.ret[count,"dic3"] = fits3["dic"]
+ fit.ret[count,"waic3"] = fits3["waic"]
+ fit.ret[count,"looic3"] = fits3["looic"]
+ fit.ret[count,"margloglik3"] = fits3["margloglik"]
+ fit.ret[count,"jags_dic3"] = extract(fit3@external$runjags,"dic")
+}
 
 
 mod4 <- ' i =~ 1*t1 + 1*t2 + 1*t3 + 1*t4
           s =~ 0*t1 + l1*t2 + l2*t3 + 1*t4'
-fit4 <- bgrowth(mod4, data=dat,sample=100000,burnin=10000, adapt=2000)
+fit4 = try(bgrowth(mod4, data=dat,sample=100000,burnin=10000, adapt=2000
+                   ,jagcontrol=list(method="rjparallel")))
+if(inherits(fit4, "try-error")){
+ fit.ret[count,"conv4"] = -9999
+ fit.ret[count,"logl4"] = -9999
+ fit.ret[count,"bic4"] = -9999
+ fit.ret[count,"dic4"] = -9999
+ fit.ret[count,"waic4"] = -9999
+ fit.ret[count,"looic4"] = -9999
+ fit.ret[count,"margloglik4"] = -9999
+ fit.ret[count,"jags_dic4"] = -9999
+}else{
+ fit.ret[count,"conv4"] = all(fit4@external$runjags$psrf$psrf[,1] < 1.2)
+ fits4 = fitmeasures(fit4)
+ fit.ret[count,"logl4"] = fits4["logl"]
+ fit.ret[count,"bic4"] = fits4["bic"]
+ fit.ret[count,"dic4"] = fits4["dic"]
+ fit.ret[count,"waic4"] = fits4["waic"]
+ fit.ret[count,"looic4"] = fits4["looic"]
+ fit.ret[count,"margloglik4"] = fits4["margloglik"]
+ fit.ret[count,"jags_dic4"] = extract(fit4@external$runjags,"dic")
+}
 
-fit.ret[count,"conv4"] = all(fit4@external$runjags$psrf$psrf[,1] < 1.2)
-fits4 = fitmeasures(fit4)
-fit.ret[count,"logl4"] = fits4["logl"]
-fit.ret[count,"bic4"] = fits4["bic"]
-fit.ret[count,"dic4"] = fits4["dic"]
-fit.ret[count,"waic4"] = fits4["waic"]
-fit.ret[count,"looic4"] = fits4["looic"]
-fit.ret[count,"margloglik4"] = fits4["margloglik"]
-fit.ret[count,"jags_dic4"] = extract(fit4@external$runjags,"dic")
-
-
+print(count)
   }
  }
 }
