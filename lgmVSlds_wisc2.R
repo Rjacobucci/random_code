@@ -6,8 +6,8 @@ names(wisc)<- c("V1","V2","V4","V6","P1","P2","P4", "P6", "Moeducat")
 library(lavaan)
 library(semPlot)
 
-model <- ' i =~ 1*V1 + 1*V2 + 1*V4 + 1*V6
-           s =~ 1*V1 + 2*V2 + 4*V4 + 6*V6 
+model <- ' i0_1 =~ 1*V1 + 1*V2 + 1*V4 + 1*V6
+           s0_1 =~ 1*V1 + 2*V2 + 4*V4 + 6*V6 
 #residuals equal
 V1 ~~ resid*V1; V2 ~~ resid*V2; V4 ~~ resid*V4; V6 ~~ resid*V6;'
 fit <- growth(model, data=wisc)
@@ -72,7 +72,7 @@ V1 ~~ resid*V1; V2 ~~ resid*V2; V4 ~~ resid*V4; V6 ~~ resid*V6;
 "
 
 fit.lds <- lavaan(lds_1, data=wisc)
-summary(fit.lds)
+summary(fit.lds,standardized=TRUE)
 
 
 

@@ -1,0 +1,573 @@
+Mplus VERSION 7
+MUTHEN & MUTHEN
+10/13/2016  10:54 AM
+
+INPUT INSTRUCTIONS
+
+  TITLE:
+
+  DATA:      FILE=wisc44.dat;
+
+  VARIABLE:
+      NAMES = age1-age4 verbal1-verbal4;
+
+      MISSING = .;
+
+      USEV = verbal1-verbal4;
+
+      !TSCORES = age1-age4;
+
+
+  !ANALYSIS: TYPE = RANDOM;
+
+  MODEL:
+  !Growth model
+    lv1 BY verbal1@1;
+    lv2 BY verbal2@1;
+    lv3 BY verbal3@1;
+    lv4 BY verbal4@1;
+
+
+    ! autoregressions
+    lv2 ON lv1@1;
+    lv3 ON lv2@1;
+    lv4 ON lv3@1;
+
+
+    ! change
+    dxv1 BY lv2@1;
+    dxv2 BY lv3@1;
+    dxv3 BY lv4@1;
+
+    ! proportional change
+    dxv1 ON lv1 (beta);
+    dxv2 ON lv2 (beta);
+    dxv3 ON lv3 (beta);
+
+
+
+    ! intercept and slope
+    intv BY lv1@1;
+
+    slopev BY dxv1@1;
+    slopev BY dxv2@2;
+    slopev BY dxv3@2;
+
+    [intv];
+
+
+    [slopev];
+
+
+    !slopev;
+
+
+    !intv;
+
+
+    slopev WITH intv;
+
+
+    ! set means to 0
+    [verbal1@0];
+    [verbal2@0];
+    [verbal3@0];
+    [verbal4@0];
+
+    ! constrain residual variances to be equal
+    verbal1 (rv);
+    verbal2 (rv);
+    verbal3 (rv);
+    verbal4 (rv);
+
+    ! set intercepts and variances to 0
+
+    [lv1@0];
+    [lv2@0];
+    [lv3@0];
+    [lv4@0];
+
+    [dxv1@0];
+    [dxv2@0];
+    [dxv3@0];
+
+
+
+    lv1@0;
+    lv2@0;
+    lv3@0;
+    lv4@0;
+
+
+
+    dxv1@0;
+    dxv2@0;
+    dxv3@0;
+
+  OUTPUT:  SAMPSTAT TECH1;
+
+
+
+INPUT READING TERMINATED NORMALLY
+
+
+
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                         204
+
+Number of dependent variables                                    4
+Number of independent variables                                  0
+Number of continuous latent variables                            9
+
+Observed dependent variables
+
+  Continuous
+   VERBAL1     VERBAL2     VERBAL3     VERBAL4
+
+Continuous latent variables
+   LV1         LV2         LV3         LV4         DXV1        DXV2
+   DXV3        INTV        SLOPEV
+
+
+Estimator                                                       ML
+Information matrix                                        OBSERVED
+Maximum number of iterations                                  1000
+Convergence criterion                                    0.500D-04
+Maximum number of steepest descent iterations                   20
+Maximum number of iterations for H1                           2000
+Convergence criterion for H1                             0.100D-03
+
+Input data file(s)
+  wisc44.dat
+
+Input data format  FREE
+
+
+SUMMARY OF DATA
+
+     Number of missing data patterns             1
+
+
+COVARIANCE COVERAGE OF DATA
+
+Minimum covariance coverage value   0.100
+
+
+     PROPORTION OF DATA PRESENT
+
+
+           Covariance Coverage
+              VERBAL1       VERBAL2       VERBAL3       VERBAL4
+              ________      ________      ________      ________
+ VERBAL1        1.000
+ VERBAL2        1.000         1.000
+ VERBAL3        1.000         1.000         1.000
+ VERBAL4        1.000         1.000         1.000         1.000
+
+
+SAMPLE STATISTICS
+
+
+     ESTIMATED SAMPLE STATISTICS
+
+
+           Means
+              VERBAL1       VERBAL2       VERBAL3       VERBAL4
+              ________      ________      ________      ________
+      1        19.585        25.415        32.607        43.750
+
+
+           Covariances
+              VERBAL1       VERBAL2       VERBAL3       VERBAL4
+              ________      ________      ________      ________
+ VERBAL1       33.565
+ VERBAL2       25.340        37.106
+ VERBAL3       30.738        33.655        53.315
+ VERBAL4       40.319        47.173        61.948       113.184
+
+
+           Correlations
+              VERBAL1       VERBAL2       VERBAL3       VERBAL4
+              ________      ________      ________      ________
+ VERBAL1        1.000
+ VERBAL2        0.718         1.000
+ VERBAL3        0.727         0.757         1.000
+ VERBAL4        0.654         0.728         0.797         1.000
+
+
+     MAXIMUM LOG-LIKELIHOOD VALUE FOR THE UNRESTRICTED (H1) MODEL IS   -2479.816
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                        7
+
+Loglikelihood
+
+          H0 Value                       -2495.380
+          H1 Value                       -2479.816
+
+Information Criteria
+
+          Akaike (AIC)                    5004.759
+          Bayesian (BIC)                  5027.986
+          Sample-Size Adjusted BIC        5005.808
+            (n* = (n + 2) / 24)
+
+Chi-Square Test of Model Fit
+
+          Value                             31.127
+          Degrees of Freedom                     7
+          P-Value                           0.0001
+
+RMSEA (Root Mean Square Error Of Approximation)
+
+          Estimate                           0.130
+          90 Percent C.I.                    0.086  0.178
+          Probability RMSEA <= .05           0.002
+
+CFI/TLI
+
+          CFI                                0.958
+          TLI                                0.964
+
+Chi-Square Test of Model Fit for the Baseline Model
+
+          Value                            585.906
+          Degrees of Freedom                     6
+          P-Value                           0.0000
+
+SRMR (Standardized Root Mean Square Residual)
+
+          Value                              0.119
+
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+ LV1      BY
+    VERBAL1            1.000      0.000    999.000    999.000
+
+ LV2      BY
+    VERBAL2            1.000      0.000    999.000    999.000
+
+ LV3      BY
+    VERBAL3            1.000      0.000    999.000    999.000
+
+ LV4      BY
+    VERBAL4            1.000      0.000    999.000    999.000
+
+ DXV1     BY
+    LV2                1.000      0.000    999.000    999.000
+
+ DXV2     BY
+    LV3                1.000      0.000    999.000    999.000
+
+ DXV3     BY
+    LV4                1.000      0.000    999.000    999.000
+
+ INTV     BY
+    LV1                1.000      0.000    999.000    999.000
+
+ SLOPEV   BY
+    DXV1               1.000      0.000    999.000    999.000
+    DXV2               2.000      0.000    999.000    999.000
+    DXV3               2.000      0.000    999.000    999.000
+
+ LV2      ON
+    LV1                1.000      0.000    999.000    999.000
+
+ LV3      ON
+    LV2                1.000      0.000    999.000    999.000
+
+ LV4      ON
+    LV3                1.000      0.000    999.000    999.000
+
+ DXV1     ON
+    LV1                0.432      0.073      5.912      0.000
+
+ DXV2     ON
+    LV2                0.432      0.073      5.912      0.000
+
+ DXV3     ON
+    LV3                0.432      0.073      5.912      0.000
+
+ SLOPEV   WITH
+    INTV              -2.912      1.138     -2.559      0.011
+
+ Means
+    INTV              19.171      0.354     54.186      0.000
+    SLOPEV            -1.839      1.106     -1.662      0.097
+
+ Intercepts
+    VERBAL1            0.000      0.000    999.000    999.000
+    VERBAL2            0.000      0.000    999.000    999.000
+    VERBAL3            0.000      0.000    999.000    999.000
+    VERBAL4            0.000      0.000    999.000    999.000
+    LV1                0.000      0.000    999.000    999.000
+    LV2                0.000      0.000    999.000    999.000
+    LV3                0.000      0.000    999.000    999.000
+    LV4                0.000      0.000    999.000    999.000
+    DXV1               0.000      0.000    999.000    999.000
+    DXV2               0.000      0.000    999.000    999.000
+    DXV3               0.000      0.000    999.000    999.000
+
+ Variances
+    INTV              18.348      2.369      7.744      0.000
+    SLOPEV             1.144      0.349      3.280      0.001
+
+ Residual Variances
+    VERBAL1           11.186      0.783     14.278      0.000
+    VERBAL2           11.186      0.783     14.278      0.000
+    VERBAL3           11.186      0.783     14.278      0.000
+    VERBAL4           11.186      0.783     14.278      0.000
+    LV1                0.000      0.000    999.000    999.000
+    LV2                0.000      0.000    999.000    999.000
+    LV3                0.000      0.000    999.000    999.000
+    LV4                0.000      0.000    999.000    999.000
+    DXV1               0.000      0.000    999.000    999.000
+    DXV2               0.000      0.000    999.000    999.000
+    DXV3               0.000      0.000    999.000    999.000
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Condition Number for the Information Matrix              0.138E-04
+       (ratio of smallest to largest eigenvalue)
+
+
+TECHNICAL 1 OUTPUT
+
+
+     PARAMETER SPECIFICATION
+
+
+           NU
+              VERBAL1       VERBAL2       VERBAL3       VERBAL4
+              ________      ________      ________      ________
+      1           0             0             0             0
+
+
+           LAMBDA
+              LV1           LV2           LV3           LV4           DXV1
+              ________      ________      ________      ________      ________
+ VERBAL1            0             0             0             0             0
+ VERBAL2            0             0             0             0             0
+ VERBAL3            0             0             0             0             0
+ VERBAL4            0             0             0             0             0
+
+
+           LAMBDA
+              DXV2          DXV3          INTV          SLOPEV
+              ________      ________      ________      ________
+ VERBAL1            0             0             0             0
+ VERBAL2            0             0             0             0
+ VERBAL3            0             0             0             0
+ VERBAL4            0             0             0             0
+
+
+           THETA
+              VERBAL1       VERBAL2       VERBAL3       VERBAL4
+              ________      ________      ________      ________
+ VERBAL1            1
+ VERBAL2            0             1
+ VERBAL3            0             0             1
+ VERBAL4            0             0             0             1
+
+
+           ALPHA
+              LV1           LV2           LV3           LV4           DXV1
+              ________      ________      ________      ________      ________
+      1           0             0             0             0             0
+
+
+           ALPHA
+              DXV2          DXV3          INTV          SLOPEV
+              ________      ________      ________      ________
+      1           0             0             2             3
+
+
+           BETA
+              LV1           LV2           LV3           LV4           DXV1
+              ________      ________      ________      ________      ________
+ LV1                0             0             0             0             0
+ LV2                0             0             0             0             0
+ LV3                0             0             0             0             0
+ LV4                0             0             0             0             0
+ DXV1               4             0             0             0             0
+ DXV2               0             4             0             0             0
+ DXV3               0             0             4             0             0
+ INTV               0             0             0             0             0
+ SLOPEV             0             0             0             0             0
+
+
+           BETA
+              DXV2          DXV3          INTV          SLOPEV
+              ________      ________      ________      ________
+ LV1                0             0             0             0
+ LV2                0             0             0             0
+ LV3                0             0             0             0
+ LV4                0             0             0             0
+ DXV1               0             0             0             0
+ DXV2               0             0             0             0
+ DXV3               0             0             0             0
+ INTV               0             0             0             0
+ SLOPEV             0             0             0             0
+
+
+           PSI
+              LV1           LV2           LV3           LV4           DXV1
+              ________      ________      ________      ________      ________
+ LV1                0
+ LV2                0             0
+ LV3                0             0             0
+ LV4                0             0             0             0
+ DXV1               0             0             0             0             0
+ DXV2               0             0             0             0             0
+ DXV3               0             0             0             0             0
+ INTV               0             0             0             0             0
+ SLOPEV             0             0             0             0             0
+
+
+           PSI
+              DXV2          DXV3          INTV          SLOPEV
+              ________      ________      ________      ________
+ DXV2               0
+ DXV3               0             0
+ INTV               0             0             5
+ SLOPEV             0             0             6             7
+
+
+     STARTING VALUES
+
+
+           NU
+              VERBAL1       VERBAL2       VERBAL3       VERBAL4
+              ________      ________      ________      ________
+      1         0.000         0.000         0.000         0.000
+
+
+           LAMBDA
+              LV1           LV2           LV3           LV4           DXV1
+              ________      ________      ________      ________      ________
+ VERBAL1        1.000         0.000         0.000         0.000         0.000
+ VERBAL2        0.000         1.000         0.000         0.000         0.000
+ VERBAL3        0.000         0.000         1.000         0.000         0.000
+ VERBAL4        0.000         0.000         0.000         1.000         0.000
+
+
+           LAMBDA
+              DXV2          DXV3          INTV          SLOPEV
+              ________      ________      ________      ________
+ VERBAL1        0.000         0.000         0.000         0.000
+ VERBAL2        0.000         0.000         0.000         0.000
+ VERBAL3        0.000         0.000         0.000         0.000
+ VERBAL4        0.000         0.000         0.000         0.000
+
+
+           THETA
+              VERBAL1       VERBAL2       VERBAL3       VERBAL4
+              ________      ________      ________      ________
+ VERBAL1       16.865
+ VERBAL2        0.000        18.644
+ VERBAL3        0.000         0.000        26.789
+ VERBAL4        0.000         0.000         0.000        56.871
+
+
+           ALPHA
+              LV1           LV2           LV3           LV4           DXV1
+              ________      ________      ________      ________      ________
+      1         0.000         0.000         0.000         0.000         0.000
+
+
+           ALPHA
+              DXV2          DXV3          INTV          SLOPEV
+              ________      ________      ________      ________
+      1         0.000         0.000         0.000         0.000
+
+
+           BETA
+              LV1           LV2           LV3           LV4           DXV1
+              ________      ________      ________      ________      ________
+ LV1            0.000         0.000         0.000         0.000         0.000
+ LV2            1.000         0.000         0.000         0.000         1.000
+ LV3            0.000         1.000         0.000         0.000         0.000
+ LV4            0.000         0.000         1.000         0.000         0.000
+ DXV1           0.000         0.000         0.000         0.000         0.000
+ DXV2           0.000         0.000         0.000         0.000         0.000
+ DXV3           0.000         0.000         0.000         0.000         0.000
+ INTV           0.000         0.000         0.000         0.000         0.000
+ SLOPEV         0.000         0.000         0.000         0.000         0.000
+
+
+           BETA
+              DXV2          DXV3          INTV          SLOPEV
+              ________      ________      ________      ________
+ LV1            0.000         0.000         1.000         0.000
+ LV2            0.000         0.000         0.000         0.000
+ LV3            1.000         0.000         0.000         0.000
+ LV4            0.000         1.000         0.000         0.000
+ DXV1           0.000         0.000         0.000         1.000
+ DXV2           0.000         0.000         0.000         2.000
+ DXV3           0.000         0.000         0.000         2.000
+ INTV           0.000         0.000         0.000         0.000
+ SLOPEV         0.000         0.000         0.000         0.000
+
+
+           PSI
+              LV1           LV2           LV3           LV4           DXV1
+              ________      ________      ________      ________      ________
+ LV1            0.000
+ LV2            0.000         0.000
+ LV3            0.000         0.000         0.000
+ LV4            0.000         0.000         0.000         0.000
+ DXV1           0.000         0.000         0.000         0.000         0.000
+ DXV2           0.000         0.000         0.000         0.000         0.000
+ DXV3           0.000         0.000         0.000         0.000         0.000
+ INTV           0.000         0.000         0.000         0.000         0.000
+ SLOPEV         0.000         0.000         0.000         0.000         0.000
+
+
+           PSI
+              DXV2          DXV3          INTV          SLOPEV
+              ________      ________      ________      ________
+ DXV2           0.000
+ DXV3           0.000         0.000
+ INTV           0.000         0.000         0.050
+ SLOPEV         0.000         0.000         0.000         0.050
+
+
+DIAGRAM INFORMATION
+
+  Use View Diagram under the Diagram menu in the Mplus Editor to view the diagram.
+  If running Mplus from the Mplus Diagrammer, the diagram opens automatically.
+
+  Diagram output
+    c:\users\rjacobucci\documents\github\random_code\wisc_dual_lds.dgm
+
+     Beginning Time:  10:54:51
+        Ending Time:  10:54:52
+       Elapsed Time:  00:00:01
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2012 Muthen & Muthen

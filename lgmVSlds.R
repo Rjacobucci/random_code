@@ -72,7 +72,7 @@ V1 ~~ resid*V1; V2 ~~ resid*V2; V4 ~~ resid*V4; V6 ~~ resid*V6;
 "
 
 fit.lds <- lavaan(lds_1, data=wisc)
-summary(fit.lds)
+summary(fit.lds,fit=T)
 
 
 

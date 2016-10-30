@@ -1,0 +1,101 @@
+TITLE:     
+
+DATA:      FILE=wisc44.dat;
+
+VARIABLE:  
+    NAMES = age1-age4 verbal1-verbal4;
+
+    MISSING = .;
+    
+    USEV = verbal1-verbal4;
+
+    !TSCORES = age1-age4;
+
+ 
+!ANALYSIS: TYPE = RANDOM;
+
+MODEL:
+!Growth model
+  lv1 BY verbal1@1;
+  lv2 BY verbal2@1;
+  lv3 BY verbal3@1;
+  lv4 BY verbal4@1;
+
+
+  ! autoregressions
+  lv2 ON lv1@1;
+  lv3 ON lv2@1;
+  lv4 ON lv3@1;
+
+
+  ! change
+  dxv1 BY lv2@1;
+  dxv2 BY lv3@1;
+  dxv3 BY lv4@1;
+
+  ! proportional change
+  dxv1 ON lv1 (beta);
+  dxv2 ON lv2 (beta);
+  dxv3 ON lv3 (beta);
+
+
+
+  ! intercept and slope
+  intv BY lv1@1;
+
+  slopev BY dxv1@1;
+  slopev BY dxv2@2;
+  slopev BY dxv3@2;
+
+  [intv];
+
+
+  [slopev];
+
+
+  !slopev;
+
+
+  !intv;
+
+
+  slopev WITH intv;
+
+
+  ! set means to 0
+  [verbal1@0];
+  [verbal2@0];
+  [verbal3@0];
+  [verbal4@0];
+
+  ! constrain residual variances to be equal
+  verbal1 (rv);
+  verbal2 (rv);
+  verbal3 (rv);
+  verbal4 (rv);
+
+  ! set intercepts and variances to 0
+
+  [lv1@0];
+  [lv2@0];
+  [lv3@0];
+  [lv4@0];
+
+  [dxv1@0];
+  [dxv2@0];
+  [dxv3@0];
+
+
+
+  lv1@0;
+  lv2@0;
+  lv3@0;
+  lv4@0;
+
+
+
+  dxv1@0;
+  dxv2@0;
+  dxv3@0; 
+
+OUTPUT:  SAMPSTAT TECH1;

@@ -1,0 +1,118 @@
+VERSION 1.0.0
+INPUT
+TITLE:
+
+
+DATA:
+      FILE=wisc44.dat;
+VARIABLE:
+    NAMES = age1-age4 verbal1-verbal4;
+    MISSING = .;
+    USEV = verbal1-verbal4;
+OUTPUT:
+  SAMPSTAT TECH1;
+MODEL:
+  lv1 BY verbal1@1;
+  lv2 BY verbal2@1;
+  lv3 BY verbal3@1;
+  lv4 BY verbal4@1;
+  lv2 ON lv1@1;
+  lv3 ON lv2@1;
+  lv4 ON lv3@1;
+  dxv1 BY lv2@1;
+  dxv2 BY lv3@1;
+  dxv3 BY lv4@1;
+  dxv1 ON lv1 (beta);
+  dxv2 ON lv2 (beta);
+  dxv3 ON lv3 (beta);
+  intv BY lv1@1;
+  slopev BY dxv1@1;
+  slopev BY dxv2@2;
+  slopev BY dxv3@2;
+  [intv];
+  [slopev];
+  slopev WITH intv;
+  [verbal1@0];
+  [verbal2@0];
+  [verbal3@0];
+  [verbal4@0];
+  verbal1 (rv);
+  verbal2 (rv);
+  verbal3 (rv);
+  verbal4 (rv);
+  [lv1@0];
+  [lv2@0];
+  [lv3@0];
+  [lv4@0];
+  [dxv1@0];
+  [dxv2@0];
+  [dxv3@0];
+  lv1@0;
+  lv2@0;
+  lv3@0;
+  lv4@0;
+  dxv1@0;
+  dxv2@0;
+  dxv3@0;
+INPUT_END
+2
+0
+0
+0
+1
+GENERAL
+0
+4
+9
+0
+verbal1 verbal2 verbal3 verbal4 lv1 lv2 lv3 lv4 dxv1 dxv2 dxv3 intv slopev
+3
+-1 -1 -1 -1 1 2 2 2 1 1 1 0 0
+0
+4
+lv1
+verbal1
+lv2
+verbal2
+lv3
+verbal3
+lv4
+verbal4
+1 1 lv1 verbal1    1.000    0.000
+1 1 lv2 verbal2    1.000    0.000
+1 1 lv3 verbal3    1.000    0.000
+1 1 lv4 verbal4    1.000    0.000
+1 1 dxv1 lv2    1.000    0.000
+1 1 dxv2 lv3    1.000    0.000
+1 1 dxv3 lv4    1.000    0.000
+1 1 intv lv1    1.000    0.000
+1 1 slopev dxv1    1.000    0.000
+1 1 slopev dxv2    2.000    0.000
+1 1 slopev dxv3    2.000    0.000
+1 1 lv1 lv2    1.000    0.000
+1 1 lv2 lv3    1.000    0.000
+1 1 lv3 lv4    1.000    0.000
+1 1 lv1 dxv1    0.432    0.073
+91 1 lv1 dxv1 beta
+1 1 lv2 dxv2    0.432    0.073
+91 1 lv2 dxv2 beta
+1 1 lv3 dxv3    0.432    0.073
+91 1 lv3 dxv3 beta
+2 1 slopev intv   -2.912    1.138
+4 1 verbal1   11.186    0.783
+94 1 verbal1 rv
+4 1 verbal2   11.186    0.783
+94 1 verbal2 rv
+4 1 verbal3   11.186    0.783
+94 1 verbal3 rv
+4 1 verbal4   11.186    0.783
+94 1 verbal4 rv
+4 1 lv1    0.000    0.000
+4 1 lv2    0.000    0.000
+4 1 lv3    0.000    0.000
+4 1 lv4    0.000    0.000
+4 1 dxv1    0.000    0.000
+4 1 dxv2    0.000    0.000
+4 1 dxv3    0.000    0.000
+5 1 intv   18.348    2.369
+5 1 slopev    1.144    0.349
